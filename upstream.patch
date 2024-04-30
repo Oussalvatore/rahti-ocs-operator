@@ -1,0 +1,45 @@
+From: Oussama Bekkouche <oussabe@csc.fi>
+Date: Tue Apr 30 10:18:48 2024 +0300
+Subject: [PATCH] Deployment workflow
+
+---
+diff --git a/.github/workflows/build-and-push.yaml b/.github/workflows/build-and-push.yaml
+new file mode 100644
+index 00000000..1e76b6a7
+--- /dev/null
++++ b/.github/workflows/build-and-push.yaml
+@@ -0,0 +1,33 @@
++---
++on: push
++
++jobs:
++  docker-push:
++    runs-on: ubuntu-latest
++    steps:
++    - uses: actions/checkout@v4
++      with:
++        fetch-depth: 0
++
++    - uses: actions/setup-go@v5
++      with:
++        go-version-file: go.mod
++
++    - uses: docker/login-action@v2
++      with:
++        registry: docker.io
++        username: ${{ secrets.DOCKER_USER_NAME }}
++        password: ${{ secrets.DOCKER_TOKEN }}
++
++    - name: Build and push docker images
++      env:
++        IMAGE_REGISTRY: docker.io
++        REGISTRY_NAMESPACE: oussabe
++      run: |
++        branch="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
++        version="${branch#release-}"
++        export IMAGE_TAG=$(date "+${version}-%Y-%m-%d-%H%M%S")
++        make ocs-operator
++        make ocs-metrics-exporter
++        make operator-bundle
++        make operator-catalog
+\ No newline at end of file
