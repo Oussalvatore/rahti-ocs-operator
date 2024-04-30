@@ -8,7 +8,7 @@ new file mode 100644
 index 00000000..1e76b6a7
 --- /dev/null
 +++ b/.github/workflows/build-and-push.yaml
-@@ -0,0 +1,37 @@
+@@ -0,0 +1,38 @@
 +---
 +on: push
 +
@@ -38,6 +38,7 @@ index 00000000..1e76b6a7
 +        branch="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
 +        version="${branch#release-}"
 +        export IMAGE_TAG=$(date "+${version}-%Y-%m-%d-%H%M%S")
++        export UX_BACKEND_OAUTH_FULL_IMAGE_NAME="quay.io/openshift/origin-oauth-proxy:$version"
 +        make ocs-operator
 +        podman push $IMAGE_REGISTRY/$REGISTRY_NAMESPACE/ocs-operator:$IMAGE_TAG
 +        make ocs-metrics-exporter
