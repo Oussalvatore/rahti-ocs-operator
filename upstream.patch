@@ -13,7 +13,7 @@ index 00000000..1e76b6a7
 +on: push
 +
 +jobs:
-+  docker-push:
++  build-and-push:
 +    runs-on: ubuntu-latest
 +    steps:
 +    - uses: actions/checkout@v4
