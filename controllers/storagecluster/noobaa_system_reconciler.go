@@ -170,7 +170,7 @@ func (r *StorageClusterReconciler) setNooBaaDesiredState(nb *nbv1.NooBaa, sc *oc
 		MaxCount:               2,
 		AdditionalVirtualHosts: []string{},
 
-		// TODO: After spec.resources["noobaa-endpoint"] is decleared obesolete this
+		// TODO: After spec.resources["noobaa-endpoint"] is declared obesolete this
 		// definition should hold a constant value. and should not be read from
 		// GetDaemonResources()
 		Resources: &endpointResources,
@@ -183,6 +183,8 @@ func (r *StorageClusterReconciler) setNooBaaDesiredState(nb *nbv1.NooBaa, sc *oc
 
 	// Override with MCG options specified in the storage cluster spec
 	if sc.Spec.MultiCloudGateway != nil {
+		nb.Spec.DenyHTTP = sc.Spec.MultiCloudGateway.DenyHTTP
+
 		dbStorageClass := sc.Spec.MultiCloudGateway.DbStorageClassName
 		if dbStorageClass != "" {
 			nb.Spec.DBStorageClass = &dbStorageClass
